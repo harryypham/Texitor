@@ -87,3 +87,10 @@ html, body, :root {
   background-position: 0 1em;
   padding: -10px 0;
 }
+
+.bg-login {
+  background-image: url("bg-login.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
