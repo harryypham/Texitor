@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { cn } from "@/lib/utils"
 
 export const Navbar = () => {
@@ -15,7 +16,7 @@ export const Navbar = () => {
             </div>
             <div className="md:ml-auto justify-end flex items-center gap-x-5 z-50">
                 <div className="text-sm"><a href="/login">Login</a></div>
-                <Button className="">Sign up</Button>
+                <Link href="/signup"><Button className="">Sign up</Button></Link>
             </div>
         </div>
     )

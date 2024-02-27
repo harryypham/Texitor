@@ -4,7 +4,7 @@ import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/registry/new-york/ui/button"
-import { UserAuthForm } from "@/app/login/_components/user-auth-form"
+import { UserAuthForm } from "@/app/signup/_components/user-auth-form"
 
 
 
@@ -20,13 +20,13 @@ export default function AuthenticationPage() {
         <div className="">
             <div className="container max-h-screen relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
-                href="/signup"
+                href="/login"
                 className={cn(
                     buttonVariants({ variant: "ghost" }),
                     "absolute right-4 top-4 md:right-8 md:top-8"
                 )}
                 >
-                Sign Up
+                Login
                 </Link>
                 <div className="relative hidden h-full flex-col bg-black p-10 text-white lg:flex dark:border-r">
                 <div className="absolute inset-0 bg-login" />

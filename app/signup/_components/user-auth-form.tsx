@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 
-import { cn } from "@/lib/utils";
-import { Icons } from "@/components/ui/icons";
-import { Button } from "@/registry/new-york/ui/button";
-import { Input } from "@/registry/new-york/ui/input";
-import { Label } from "@/registry/new-york/ui/label";
+import { cn } from "@/lib/utils"
+import { Icons } from "@/components/ui/icons"
+import { Button } from "@/registry/new-york/ui/button"
+import { Input } from "@/registry/new-york/ui/input"
+import { Label } from "@/registry/new-york/ui/label"
 
 import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   const { isLoaded, signUp, setActive } = useSignUp();
   const [emailAddress, setEmailAddress] = useState("");
@@ -29,16 +29,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (!isLoaded) {
       return;
     }
-
+ 
     try {
       await signUp.create({
         emailAddress,
         password,
       });
-
+ 
       // send the email.
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
+ 
       // change the UI to our pending section.
       setPendingVerification(true);
     } catch (err: any) {
@@ -51,7 +51,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (!isLoaded) {
       return;
     }
-
+ 
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
@@ -62,22 +62,23 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         console.log(JSON.stringify(completeSignUp, null, 2));
       }
       if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        console.log("Sign Up Success");
-        router.push("/");
+        await setActive({ session: completeSignUp.createdSessionId })
+        console.log("Sign Up Success")
+        router.push("/")
       }
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
     }
   };
 
+
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
+    event.preventDefault()
+    setIsLoading(true)
 
     setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+      setIsLoading(false)
+    }, 3000)
   }
 
   return (
@@ -85,7 +86,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       {!pendingVerification && (
         <div className="space-y-6">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Welcome back!</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+              Create an account
+          </h1>
+          <p className="text-sm text-muted-foreground">
+              Enter your email below to create your account
+          </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-2">
@@ -121,7 +127,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Sign In
+                Sign Up with Email
               </Button>
             </div>
           </form>
@@ -130,10 +136,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       {pendingVerification && (
         <div>
           <form>
-            <p>
-              We sent a code to{" "}
-              <span className="font-semibold">{emailAddress}</span>
-            </p>
+            <p>We sent a code to <span className="font-semibold">{emailAddress}</span></p>
             <div className="flex mt-4 gap-x-3">
               <Input
                 id="code"
@@ -141,7 +144,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 placeholder="Code..."
                 onChange={(e) => setCode(e.target.value)}
               />
-              <Button onClick={onPressVerify}>Verify Email</Button>
+              <Button onClick={onPressVerify}>
+                Verify Email
+              </Button>
             </div>
           </form>
         </div>
@@ -165,5 +170,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         GitHub
       </Button> */}
     </div>
-  );
+  )
 }
