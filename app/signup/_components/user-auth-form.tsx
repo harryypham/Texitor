@@ -53,6 +53,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     }
  
     try {
+      setIsLoading(false);
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       });
@@ -64,7 +65,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId })
         console.log("Sign Up Success")
-        router.push("/")
+        router.push("/docs")
       }
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
@@ -144,9 +145,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 placeholder="Code..."
                 onChange={(e) => setCode(e.target.value)}
               />
+              {!isLoading && (
               <Button onClick={onPressVerify}>
-                Verify Email
+                Verify email
               </Button>
+              )}
+              {isLoading && (
+                <Button>
+                  Loading
+              </Button>
+              )}
             </div>
           </form>
         </div>

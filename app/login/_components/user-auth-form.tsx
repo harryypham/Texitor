@@ -9,20 +9,23 @@ import { Input } from "@/registry/new-york/ui/input";
 import { Label } from "@/registry/new-york/ui/label";
 
 import { useState } from "react";
-import { useSignUp } from "@clerk/nextjs";
+import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+
+import { useClerk } from "@clerk/nextjs";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const { isLoaded, signUp, setActive } = useSignUp();
+  const { isLoaded, signIn, setActive } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const router = useRouter();
+  const { signOut } = useClerk()
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -31,40 +34,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     }
 
     try {
-      await signUp.create({
-        emailAddress,
+      const result = await signIn.create({
+        identifier: emailAddress,
         password,
       });
 
-      // send the email.
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      // change the UI to our pending section.
-      setPendingVerification(true);
-    } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
-    }
-  };
-
-  const onPressVerify = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (!isLoaded) {
-      return;
-    }
-
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-      if (completeSignUp.status !== "complete") {
-        /*  investigate the response, to see if there was an error
-         or if the user needs to complete more steps.*/
-        console.log(JSON.stringify(completeSignUp, null, 2));
-      }
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        console.log("Sign Up Success");
-        router.push("/");
+      if (result.status === "complete") {
+        console.log("login abala")
+        await setActive({session: result.createdSessionId})
+        router.push("/docs")
+      } else {
+        console.log(result)
       }
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
@@ -123,25 +103,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 )}
                 Sign In
               </Button>
-            </div>
-          </form>
-        </div>
-      )}
-      {pendingVerification && (
-        <div>
-          <form>
-            <p>
-              We sent a code to{" "}
-              <span className="font-semibold">{emailAddress}</span>
-            </p>
-            <div className="flex mt-4 gap-x-3">
-              <Input
-                id="code"
-                value={code}
-                placeholder="Code..."
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <Button onClick={onPressVerify}>Verify Email</Button>
+              <Button onClick={() => signOut(() => router.push("/"))}>
+                Sign out
+              </Button>
             </div>
           </form>
         </div>
