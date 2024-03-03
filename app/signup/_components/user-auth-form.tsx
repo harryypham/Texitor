@@ -9,21 +9,32 @@ import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs"
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-
+  
   const { isLoaded, signUp, setActive } = useSignUp();
+  const {user} = useUser();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setfirstName] = useState("")
+  const [lastName, setlastName] = useState("")
+  const [file, setFile] = useState<File | null>(null);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const router = useRouter();
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0])
+    }
+  }
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!isLoaded) {
@@ -34,6 +45,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       await signUp.create({
         emailAddress,
         password,
+        firstName,
+        lastName
       });
  
       // send the email.
@@ -65,6 +78,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId })
         console.log("Sign Up Success")
+        if (file) {
+          console.log("file uploaded")
+          user?.setProfileImage({file: file}).then((value) => {
+            console.log(value)
+          })
+        }
+        
+        
         router.push("/docs")
       }
     } catch (err: any) {
@@ -96,6 +117,32 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-2">
+              <div className="flex gap-x-4">
+                <div className="grid gap-1">
+                  <Label className="" htmlFor="firstname">
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstname"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    onChange={(e) => setfirstName(e.target.value)}
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <Label className="" htmlFor="lastname">
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastname"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    onChange={(e) => setlastName(e.target.value)}
+                  />
+                </div>
+              </div>
               <div className="grid gap-1">
                 <Label className="" htmlFor="email">
                   Email
@@ -122,6 +169,17 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                   autoCorrect="off"
                   disabled={isLoading}
                   onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-1">
+                <Label className="" htmlFor="picture">
+                  Profile Image
+                </Label>
+                <Input
+                  id="picture"
+                  disabled={isLoading}
+                  type="file"
+                  onChange={handleFileUpload}
                 />
               </div>
               <Button className="mt-4" disabled={isLoading}>

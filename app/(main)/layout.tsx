@@ -3,6 +3,8 @@
 import { useConvexAuth } from "convex/react";
 import { redirect } from "next/navigation";
 import { Navigation } from "./_components/navigation";
+import Lottie from "lottie-react";
+import loadingAnimation from "@/public/loading.json"
 
 const MainLayout = ({
     children
@@ -12,14 +14,13 @@ const MainLayout = ({
     const {isAuthenticated, isLoading} = useConvexAuth();
     if (isLoading) {
         return (
-            <div className="h-full flex items-center justify-center">
-                Loading
+            <div className="w-full h-full flex items-center justify-center">
+                <Lottie animationData={loadingAnimation} loop={true} className="w-[100px]"></Lottie>
             </div>
         )
     }
 
-    if (!isAuthenticated) {
-        console.log('because of me')
+    if (!isLoading && !isAuthenticated) {
         return redirect("/")
     }
 

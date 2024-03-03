@@ -36,7 +36,7 @@ export default function AuthenticationPage() {
                 
                 </div>
                 <div className="lg:p-8">
-                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] md:w-[450px]">
                     
                     <UserAuthForm />
                     <p className="px-8 text-center text-sm text-muted-foreground">

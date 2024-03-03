@@ -7,8 +7,6 @@ import { Button, buttonVariants } from "@/registry/new-york/ui/button"
 import { UserAuthForm } from "@/app/login/_components/user-auth-form"
 import { OAuthStrategy } from "@clerk/types";
 
-
-
 export const metadata: Metadata = {
   title: "Authentication",
   description: "Authentication forms built using the components.",

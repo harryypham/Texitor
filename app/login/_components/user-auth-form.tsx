@@ -17,15 +17,18 @@ import { useClerk } from "@clerk/nextjs";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const { isLoaded, signIn, setActive } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
-  const [code, setCode] = useState("");
-  const router = useRouter();
+  
   const { signOut } = useClerk()
+
+  
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
