@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Navigation } from "./_components/navigation";
 import Lottie from "lottie-react";
 import loadingAnimation from "@/public/loading.json"
+import { SearchCommand } from "@/components/search-command";
 
 const MainLayout = ({
     children
@@ -28,6 +29,7 @@ const MainLayout = ({
         <div className="h-full flex">
             <Navigation />
             <main className="h-full flex-1 overflow-y-auto">
+                <SearchCommand />
                 {children}
             </main>    
         </div>
