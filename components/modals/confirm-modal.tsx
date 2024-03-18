@@ -43,7 +43,7 @@ export const ConfirmModal = ({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={(e) => {e.stopPropagation()}}>
-                        Cancle
+                        Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction onClick={handleConfirm}>
                         Confirm
